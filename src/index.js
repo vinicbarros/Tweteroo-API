@@ -24,7 +24,6 @@ app.post("/tweets", (req, res) => {
   const { tweet } = req.body;
   const { user } = req.headers;
   const filteredUsers = users.filter((u) => u.username === user).length >= 1;
-  console.log(filteredUsers);
 
   if (!user || !tweet || !filteredUsers) {
     return res.status(400).send({ message: "Campos inválidos!" });
@@ -34,7 +33,15 @@ app.post("/tweets", (req, res) => {
 });
 
 app.get("/tweets", (req, res) => {
-  const lastTweets = tweets.slice(-10).map((tweet) => {
+  const { page } = req.query;
+  let aux;
+  if (!page) {
+    aux = 1;
+  } else {
+    aux = page;
+  }
+
+  const lastTweets = tweets.slice(aux * -10).map((tweet) => {
     const profileImg = users.filter(
       (user) => user.username === tweet.username
     )[0].avatar;
