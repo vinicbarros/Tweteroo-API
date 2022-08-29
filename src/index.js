@@ -52,4 +52,15 @@ app.get("/tweets", (req, res) => {
 
 app.listen(5000);
 
-app.get("/tweets/:username");
+app.get("/tweets/:username", (req, res) => {
+  const { username } = req.params;
+  const filteredTweets = tweets
+    .filter((tweet) => tweet.username === username)
+    .map((tweet) => {
+      const profileImg = users.filter(
+        (user) => user.username === tweet.username
+      )[0].avatar;
+      return { ...tweet, avatar: profileImg };
+    });
+  res.send(filteredTweets);
+});
